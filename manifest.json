@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json.schemastore.org/foxx-manifest",
+  "name": "foxx-service",
+  "version": "2.0.20220626",
+  "author": "Skitsanos",
+  "main": "src/index.js",
+  "scripts": {
+    "setup": "src/setup.js",
+    "telegram_chat_message": "src/scripts/telegram_chat_message.js"
+  },
+  "engines": {
+    "arangodb": "^3.0.0"
+  },
+  "configuration": {
+    "showExecTime": {
+      "default": false,
+      "type": "boolean"
+    },
+    "sessionTtl": {
+      "default": 10,
+      "type": "integer",
+      "description": "The time in seconds since the last update until a session will be considered expired"
+    },
+    "googleAnalyticsId": {
+      "default": "G-Y32FMJEM1W",
+      "type": "string",
+      "description": "Google Analytics Measurement ID"
+    },
+    "telegramToken": {
+      "default": "xyz",
+      "type": "string",
+      "description": "Telegram bot token, ref: https://core.telegram.org/bots/api#authorizing-your-bot"
+    }
+  }
+}

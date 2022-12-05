@@ -1,0 +1,91 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+jobs:
+  api-test:
+    parallelism: 4
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    #docker:
+    #  - image: cimg/base:stable
+    machine:
+      image: ubuntu-2004:202010-01
+    resource_class: large
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - checkout
+
+      - run:
+          name: "Install Node 16"
+          command: |
+            nvm install 16
+
+      - run:
+          name: "Install Foxx CLI"
+          command: |
+            #yarn global add foxx-cli
+            npm i -g foxx-cli
+
+      - run:
+          name: "Get ArangoDB"
+          command: docker pull arangodb/arangodb:latest
+
+      - run:
+          name: "Get Hurl"
+          command: |
+            curl -LO https://github.com/Orange-OpenSource/hurl/releases/download/1.6.1/hurl_1.6.1_amd64.deb
+            sudo dpkg -i hurl_1.6.1_amd64.deb
+
+      - run:
+          name: "Start Docker"
+          command: | 
+            docker-compose up
+          background: true
+
+      - run:
+          name: "Waiting for ArangoDB to Initialize"
+          command: |
+            wait_for_url () {
+                echo "Testing $1"
+                max_in_s=$2
+                delay_in_s=1
+                total_in_s=0
+                while [ $total_in_s -le "$max_in_s" ]
+                do
+                  echo "Wait ${total_in_s}s"
+                  if (echo -e "GET $1\nHTTP/* *" | hurl > /dev/null 2>&1;) then
+                    return 0
+                  fi
+                  total_in_s=$(( total_in_s +  delay_in_s))
+                  sleep $delay_in_s
+                done
+                return 1
+            }
+            wait_for_url 'http://localhost:8529' 60
+
+      - run:
+          name: "Setup Database"
+          command: |
+            docker exec -it arangodb-dev arangosh --server.username root --server.password openSesame --javascript.execute-string "db._createDatabase('dev',{},[{username: 'dev', passwd: 'sandbox', active: true}]);"
+
+      - run:
+          name: "Register Foxx API services"
+          command: |
+            foxx server set dev http://dev:sandbox@localhost:8529
+            foxx install /api . --server dev --database dev
+            foxx list --server dev --database dev
+
+      - run:
+          name: "Say hello"
+          command: hurl --test --variables-file .api-test/.vars .api-test/*.hurl
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  test-api-services:
+    jobs:
+      - api-test
