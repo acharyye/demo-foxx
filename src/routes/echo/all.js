@@ -3,7 +3,7 @@ module.exports = {
     name: 'Echo',
     handler: (req, res) =>
     {
-        const {q, skip = 0, pageSize = 10} = req.queryParams;
+        const {q, skip = 0, pageSize = 25} = req.queryParams;
 
         res.send({
             result: {

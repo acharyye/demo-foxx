@@ -1,22 +1,20 @@
 const {aql, query, time} = require('@arangodb');
 module.exports = {
     contentType: 'application/json',
-    name: 'Get user by id',
+    name: 'Get airport by id',
     handler: (req, res) =>
     {
         const {filter} = module.context.utils;
 
         const start = time();
 
-
         const {id} = req.pathParams;
 
         const [result] = query`
-        for doc in users
+        for doc in airports
         filter doc._key == ${id}
         return merge(unset(doc, '_id', '_rev'), {debug: true})
-        `.toArray()
-
+        `.toArray();
 
         res.send({
             result,
