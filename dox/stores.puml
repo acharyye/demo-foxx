@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Test -> User: Creating user
+User -> Store: Creating store
+Test -> Store: Modify store details
+Test -> Store: Get store by id
+Test -> Store: Get all stores
+Test -> Store: Get stores for user
+Test -> Store: Delete store by id
+Test -> User: Delete user
+Test -> Test: Done
+
+@enduml

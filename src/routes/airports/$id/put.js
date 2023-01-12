@@ -3,7 +3,7 @@ const joi = require('joi');
 
 module.exports = {
     contentType: 'application/json',
-    name: 'delete airport by id',
+    name: 'update airport by $id',
 
     body: {
         model: joi.object({

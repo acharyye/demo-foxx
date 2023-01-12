@@ -7,13 +7,28 @@ const collections = [
             {
                 type: 'hash',
                 unique: true,
-                fields: ['email']
+                fields: ['username']
             }
         ]
     },
 
     {
         name: 'sessions'
+    },
+    {
+        name: 'products'
+    },
+    {
+        name: 'categories'
+    },
+    {
+        name: 'orders'
+    },
+    {
+        name: 'reviews'
+    },
+    {
+        name: 'stores'
     }
 ];
 

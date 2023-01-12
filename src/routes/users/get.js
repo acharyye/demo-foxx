@@ -18,7 +18,8 @@ module.exports = {
 
             dataQuery = JSON.parse(decodeURI(q));
             //console.log(dataQuery)
-        } catch (e)
+        }
+        catch (e)
         {
             dataQuery = !q
                 ? []
@@ -55,6 +56,9 @@ module.exports = {
         RETURN {data: ds, total: total, pageSize: ${pageSize}, skip: ${skip} }          
         `.toArray()[0];
 
-        res.send({result: queryResult, execTime: time() - start});
+        res.send({
+            result: queryResult,
+            execTime: time() - start
+        });
     }
 };

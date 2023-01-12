@@ -9,7 +9,7 @@ module.exports = {
             req.sessionStorage.save(req.session);
         }
 
-        const sid = req.get('x-session-id');
+        const sid = req.get('x-session-$id');
         const {remove} = module.context;
         remove('sessions', sid);
 

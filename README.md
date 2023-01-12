@@ -104,19 +104,19 @@ Another example - we need to add a ```/api/users``` route that on _GET_ method w
 -- /echo
 ---- all.js
 -- /users
----- post.js
----- post.js
+---- put.js
+---- put.js
 ```
 
 In other words, file path your API route method handler mirrors your URL path
 
 | **API endpoint**                 | **Handler**                       |
 | -------------------------------- | --------------------------------- |
-| GET /api/echo                    | /api/echo/post.js                  |
-| GET /api/users                   | /api/users/post.js                 |
-| POST /api/users                  | /api/users/post.js                |
-| GET /api/users/_:id_/tasks       | /api/users/$id/tasks/post.js       |
-| GET /api/users/_:id_/tasks/:task | /api/users/$id/tasks/$task/post.js |
+| GET /api/echo                    | /api/echo/put.js                  |
+| GET /api/users                   | /api/users/put.js                 |
+| POST /api/users                  | /api/users/put.js                |
+| GET /api/users/_:id_/tasks       | /api/users/$id/tasks/put.js       |
+| GET /api/users/_:id_/tasks/:task | /api/users/$id/tasks/$task/put.js |
 
 ### Parametrized path
 
@@ -124,20 +124,20 @@ Adding parameters to your URL point handling is pretty simple. Probably, you alr
 
 | **API endpoint**                 | **Handler**                       |
 | -------------------------------- | --------------------------------- |
-| GET /api/users/_:id_/tasks/:task | /api/users/$id/tasks/$task/post.js |
+| GET /api/users/_:id_/tasks/:task | /api/users/$id/tasks/$task/put.js |
 
 ```
 /routes/
 -- /users/
----- post.js
----- post.js
+---- put.js
+---- put.js
 ---- /$id/
------- post.js
+------ put.js
 ------/tasks/
--------- post.js
--------- post.js
+-------- put.js
+-------- put.js
 -------- /$task/
----------- post.js
+---------- put.js
 ```
 
 More on path parameters you can be read on [https://www.arangodb.com/docs/stable/foxx-getting-started.html#parameter-validation](https://www.arangodb.com/docs/stable/foxx-getting-started.html#parameter-validation).
@@ -151,7 +151,7 @@ The `body` defines the request body recognized by the endpoint. There can only b
 In the absence of a request body definition, the request object’s *body* property will be initialized to the unprocessed *rawBody* buffer.
 
 ```javascript
-//users/post.js
+//users/put.js
 
 module.exports = {
   contentType: 'application/json',
@@ -218,11 +218,11 @@ Arguments used for context operations:
 **Using context utils**
 
 ```javascript
-//users/$id/post.js
+//users/$$id/put.js
 
 module.exports = {
   contentType: 'application/json',
-  name: 'Get user by id',
+  name: 'Get user by $id',
   handler: (req, res) =>
   {
     const {id} = req.pathParams;

@@ -61,7 +61,7 @@ const sessionManager = {
                 }
 
                 //otherwise, just continue with sessions based access
-                const sid = req.get('x-session-id');
+                const sid = req.get('x-session-$id');
 
                 if (!Boolean(sid))
                 {
